@@ -1,0 +1,11 @@
+﻿<RichTextBox x:Class="FASTASelector.SequenceViewer"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             AcceptsReturn="True"
+             AcceptsTab="True"
+             IsInactiveSelectionHighlightEnabled="True"
+             IsReadOnly="True"
+             HorizontalScrollBarVisibility="Auto"
+             VerticalScrollBarVisibility="Visible">
+</RichTextBox>
