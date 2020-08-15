@@ -60,23 +60,38 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppConfiguration.cs" />
-    <Compile Include="FASTA.cs" />
+    <Compile Include="FASTA\Metadata.cs" />
+    <Compile Include="FASTA\MetadataCollection.cs" />
+    <Compile Include="FASTA\SequenceCollection.cs" />
+    <Compile Include="ColumnSizeCollection.cs" />
+    <Compile Include="UserInterface\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Utility.cs" />
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="ListViewSortAdorner.cs" />
-    <Compile Include="OptionWindow.xaml.cs">
-      <DependentUpon>OptionWindow.xaml</DependentUpon>
+    <Compile Include="UserInterface\Factory.cs" />
+    <Compile Include="UserInterface\ListViewSortAdorner.cs" />
+    <Compile Include="UserInterface\FontFamilyToStringConverter.cs" />
+    <Compile Include="UserInterface\OptionDialog.xaml.cs">
+      <DependentUpon>OptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Sequence.cs" />
-    <Compile Include="SequenceViewer.xaml.cs">
+    <Compile Include="FASTA\Sequence.cs" />
+    <Compile Include="UserInterface\SequenceViewer.xaml.cs">
       <DependentUpon>SequenceViewer.xaml</DependentUpon>
     </Compile>
-    <Page Include="OptionWindow.xaml">
+    <Compile Include="UserInterface\MainWindow.EventHandler.cs" />
+    <Page Include="UserInterface\AboutDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="UserInterface\OptionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -84,11 +99,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="UserInterface\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SequenceViewer.xaml">
+    <Page Include="UserInterface\SequenceViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,7 +138,8 @@
     <Resource Include="Resources\AppIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\dna.png" />
+    <Resource Include="Resources\dna.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

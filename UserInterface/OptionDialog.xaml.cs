@@ -1,15 +1,32 @@
-﻿using System.Reflection;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FASTASelector
+namespace FASTASelector.UserInterface
 {
-    internal partial class OptionWindow : Window
+    internal partial class OptionDialog : Window
     {
-        public OptionWindow( )
+        public OptionDialog( )
         {
+            ObservableCollection<string> encodings = new ObservableCollection<string>( );
+            foreach( EncodingInfo info in Encoding.GetEncodings( ) )
+            {
+                Encoding encoding = info.GetEncoding( );
+                encodings.Add( Utility.EncodingToString( encoding ) );
+            }
+            EncodingList = new ObservableCollection<string>( encodings.OrderBy( i => i ) );
             InitializeComponent( );
+        }
+
+
+        public ObservableCollection<string> EncodingList
+        {
+            get;
+            private set;
         }
 
 

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace FASTASelector
+namespace FASTASelector.UserInterface
 {
     public class ListViewSortAdorner : Adorner
     {   // http://www.wpf-tutorial.com/listview-control/listview-how-to-column-sorting/
