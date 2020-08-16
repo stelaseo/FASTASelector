@@ -22,7 +22,7 @@ namespace FASTASelector.UserInterface
                 if( Controller.MetadataRead( dlg.FileName ) )
                 {
                     ShowStatus( "Successfully loaded the metadata from " + dlg.FileName );
-                    UpdateMetadataListView( );
+                    uiMetadataList.UpdateListViewColumns( );
                 }
                 else
                 {
@@ -53,7 +53,7 @@ namespace FASTASelector.UserInterface
                     if( Controller.MetadataImport( dlg.FileName ) )
                     {
                         ShowStatus( "Successfully merged the metadata from " + dlg.FileName );
-                        UpdateMetadataListView( );
+                        uiMetadataList.UpdateListViewColumns( );
                     }
                     else
                     {
@@ -255,8 +255,8 @@ namespace FASTASelector.UserInterface
             dialog.Owner = this;
             dialog.ShowDialog( );
             Controller.UpdateSequenceHeader( );
-            UpdateMetadataListView( );
-            UpdateSequenceListView( );
+            uiMetadataList.UpdateListViewColumns( );
+            uiSequenceList.UpdateListViewColumns( );
             uiSequenceViewer.UpdateView( );
         }
 

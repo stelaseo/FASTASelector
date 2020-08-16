@@ -86,6 +86,12 @@
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Tasks\Task.cs" />
+    <Compile Include="UserInterface\SequenceListView.xaml.cs">
+      <DependentUpon>SequenceListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\MetadataListView.xaml.cs">
+      <DependentUpon>MetadataListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\MainWindow.MenuEvent.cs" />
     <Compile Include="Utility.cs" />
     <None Include="LICENSE">
@@ -102,6 +108,14 @@
     </Compile>
     <Compile Include="UserInterface\MainWindow.MainPageEvent.cs" />
     <Page Include="UserInterface\AboutDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\SequenceListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\MetadataListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

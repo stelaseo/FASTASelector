@@ -1,21 +1,16 @@
 ﻿using FASTASelector.Data;
 using Microsoft.Win32;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace FASTASelector.UserInterface
 {
     internal partial class MainWindow
     {
-        private GridViewColumnHeader _lvSortColumn = null;
-        private ListViewSortAdorner _lvSortAdorner = null;
-
 
         private void ClickLogClear( object sender, RoutedEventArgs e )
         {
@@ -49,23 +44,6 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void ClickMetadataLink( object sender, RoutedEventArgs e )
-        {
-            if( sender is Button button )
-            {
-                if( button.Tag is Metadata metadata )
-                {
-                    uiMetadataList.SelectedItem = metadata;
-                    uiMetadataList.ScrollIntoView( metadata );
-                }
-                else
-                {
-                    uiMetadataList.SelectedItem = null;
-                }
-            }
-        }
-
-
         private void ClickSearchButton( object sender, RoutedEventArgs e )
         {
             Controller.SequenceSearch( );
@@ -80,32 +58,11 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void ColumnHeaderClick( object sender, RoutedEventArgs e )
+        private void ClickMetadataLink( object sender, RoutedEventArgs e )
         {
-            GridViewColumnHeader column = sender as GridViewColumnHeader;
-            if( _lvSortColumn != null )
+            if( sender is Button button )
             {
-                AdornerLayer.GetAdornerLayer( _lvSortColumn ).Remove( _lvSortAdorner );
-                uiSequenceList.Items.SortDescriptions.Clear( );
-            }
-            if( _lvSortColumn == null || _lvSortColumn != column )
-            {
-                _lvSortColumn = column;
-                _lvSortAdorner = new ListViewSortAdorner( _lvSortColumn, ListSortDirection.Ascending );
-                AdornerLayer.GetAdornerLayer( _lvSortColumn ).Add( _lvSortAdorner );
-                uiSequenceList.Items.SortDescriptions.Add( new SortDescription( column.Tag.ToString( ), ListSortDirection.Ascending ) );
-            }
-            else if( _lvSortColumn == column && _lvSortAdorner.Direction == ListSortDirection.Ascending )
-            {
-                _lvSortColumn = column;
-                _lvSortAdorner = new ListViewSortAdorner( _lvSortColumn, ListSortDirection.Descending );
-                AdornerLayer.GetAdornerLayer( _lvSortColumn ).Add( _lvSortAdorner );
-                uiSequenceList.Items.SortDescriptions.Add( new SortDescription( column.Tag.ToString( ), ListSortDirection.Descending ) );
-            }
-            else
-            {
-                _lvSortColumn = null;
-                _lvSortAdorner = null;
+                SelectMetadata( this, button.Tag as Metadata );
             }
         }
 
@@ -127,68 +84,16 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void MetadataList_KeyDown( object sender, KeyEventArgs e )
+        private void SelectMetadata( object sender, Metadata e )
         {
-            if( sender is ListView uiMetadataListView )
+            if( e != null )
             {
-                switch( e.Key )
-                {
-                case Key.Delete:
-                case Key.Back:
-                    MenuRemoveSelectedMetadata( sender, e );
-                    e.Handled = true;
-                    break;
-                case Key.Space:
-                    {
-                        bool selectAll = false;
-                        foreach( Metadata item in uiMetadataListView.SelectedItems )
-                        {
-                            if( !item.Checked )
-                            {
-                                selectAll = true;
-                            }
-                        }
-                        foreach( Metadata item in uiMetadataListView.SelectedItems )
-                        {
-                            item.Checked = selectAll;
-                        }
-                        e.Handled = true;
-                    }
-                    break;
-                }
+                uiMetadataList.SelectedItem = e;
+                uiMetadataList.ScrollIntoView( e );
             }
-        }
-
-
-        private void SequenceList_KeyDown( object sender, KeyEventArgs e )
-        {
-            if( sender is ListView uiSequenceListView )
+            else
             {
-                switch( e.Key )
-                {
-                case Key.Delete:
-                case Key.Back:
-                    MenuRemoveSelectedSequences( sender, e );
-                    e.Handled = true;
-                    break;
-                case Key.Space:
-                    {
-                        bool selectAll = false;
-                        foreach( Sequence seq in uiSequenceListView.SelectedItems )
-                        {
-                            if( !seq.Checked )
-                            {
-                                selectAll = true;
-                            }
-                        }
-                        foreach( Sequence seq in uiSequenceListView.SelectedItems )
-                        {
-                            seq.Checked = selectAll;
-                        }
-                        e.Handled = true;
-                    }
-                    break;
-                }
+                uiMetadataList.SelectedItem = null;
             }
         }
 

@@ -71,41 +71,16 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Metadata,Mode=OneTime}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
-                <ListView Grid.Row="1"
-                          Name="uiMetadataList"
-                          BorderBrush="Transparent"
-                          BorderThickness="0"
-                          ItemsSource="{Binding Controller.Metadata,Mode=OneWay}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                          ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Metadata,Mode=OneWay}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
+                <ui:MetadataListView x:Name="uiMetadataList" Grid.Row="1" DataContext="{Binding Controller,Mode=OneTime}" ItemsSource="{Binding Metadata,Mode=OneWay}" RemoveSelectedItems="MenuRemoveSelectedMetadata"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Sequences,Mode=OneTime}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
-                <ListView Grid.Row="1"
-                          Name="uiSequenceList"
-                          BorderBrush="Transparent"
-                          BorderThickness="0"
-                          ItemsSource="{Binding Controller.Sequences,Mode=OneWay}"
-                          PreviewKeyDown="SequenceList_KeyDown"
-                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                          ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Sequences,Mode=OneWay}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
+                <ui:SequenceListView x:Name="uiSequenceList" Grid.Row="1" DataContext="{Binding Controller,Mode=OneTime}" ItemsSource="{Binding Sequences,Mode=OneWay}" RemoveSelectedItems="MenuRemoveSelectedSequences" SelectMetadata="SelectMetadata"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="4" DataContext="{Binding ElementName=uiSequenceList,Path=SelectedItem,Mode=OneWay}">
                 <Grid.ColumnDefinitions>
@@ -121,7 +96,7 @@
                     <TextBlock Text="{Binding RawHeader,Mode=OneWay}"/>
                 </CheckBox>
                 <TextBlock Grid.Column="1" Grid.Row="0" Margin="4,0" Text="{Binding Value.Length,Mode=OneWay,StringFormat=Length: {0}}" VerticalAlignment="Center"/>
-                <Button Grid.Column="2" Grid.Row="0" Content="↗" Padding="6,0" Tag="{Binding Metadata,Mode=OneWay}" Click="ClickMetadataLink"/>
+                <Button Grid.Column="2" Grid.Row="0" Content="Select Metadata" Padding="4,2" Tag="{Binding Metadata,Mode=OneWay}" Click="ClickMetadataLink"/>
                 <ui:SequenceViewer x:Name="uiSequenceViewer" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Data="{Binding ElementName=uiSequenceList,Path=SelectedItem,Mode=OneWay}"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="0" Grid.RowSpan="5">

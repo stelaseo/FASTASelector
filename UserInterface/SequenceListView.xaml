@@ -1,0 +1,15 @@
+﻿<ListView x:Class="FASTASelector.UserInterface.SequenceListView"
+          x:ClassModifier="internal"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          BorderBrush="Transparent"
+          BorderThickness="0"
+          PreviewKeyDown="ListView_PreviewKeyDown"
+          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+          ScrollViewer.VerticalScrollBarVisibility="Visible">
+    <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+    </ListView.ItemContainerStyle>
+</ListView>

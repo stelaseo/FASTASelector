@@ -129,36 +129,8 @@ namespace FASTASelector.UserInterface
             };
             App.Log = PrintLog;
             Title = App.Name + " v" + App.Version;
-            UpdateMetadataListView( );
-            UpdateSequenceListView( );
-        }
-
-
-        private void UpdateMetadataListView( )
-        {
-            GridView gridView = new GridView( );
-            gridView.Columns.Add( Factory.CreateCheckBoxColumn( App.Configuration.CoreUI.MetadataColumnSize, "Checked", ColumnHeaderClick ) );
-            foreach( KeyValuePair<string, string> kv in Controller.Metadata.Columns )
-            {
-                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.MetadataColumnSize, kv.Value, "[" + kv.Key + "]", ColumnHeaderClick ) );
-            }
-            uiMetadataList.View = gridView;
-        }
-
-
-        private void UpdateSequenceListView( )
-        {
-            string[] keys = App.Controller.SequenceHeaderKeys;
-            GridView gridView = new GridView( );
-            gridView.Columns.Add( Factory.CreateCheckBoxColumn( App.Configuration.CoreUI.SequenceColumnSize, "Checked", ColumnHeaderClick ) );
-            for( int i = 0; i < keys.Length; ++i )
-            {
-                string columnName = Controller.GetSequenceListColumnName( keys[i] );
-                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, columnName, "Header[" + keys[i] + "]", ColumnHeaderClick ) );
-            }
-            gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, "Length", "Value.Length", ColumnHeaderClick, HorizontalAlignment.Center ) );
-            gridView.Columns.Add( Factory.CreateLinkTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, "Metadata", "Metadata", ColumnHeaderClick, ClickMetadataLink ) );
-            uiSequenceList.View = gridView;
+            uiMetadataList.UpdateListViewColumns( );
+            uiSequenceList.UpdateListViewColumns( );
         }
 
     }
