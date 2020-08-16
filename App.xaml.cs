@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FASTASelector.Configurations;
+using FASTASelector.Data;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -36,6 +38,13 @@ namespace FASTASelector
             get;
             private set;
         } = new AppConfiguration( );
+
+
+        internal static Controller Controller
+        {
+            get;
+            private set;
+        } = new Controller( );
 
 
         internal static string Name

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using FASTASelector.Configurations;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 

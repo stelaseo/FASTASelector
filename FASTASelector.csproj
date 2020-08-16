@@ -59,30 +59,48 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppConfiguration.cs" />
-    <Compile Include="FASTA\Metadata.cs" />
-    <Compile Include="FASTA\MetadataCollection.cs" />
-    <Compile Include="FASTA\SequenceCollection.cs" />
-    <Compile Include="ColumnSizeCollection.cs" />
+    <Compile Include="Configurations\ConfigCategoryBase.cs" />
+    <Compile Include="Configurations\MetadataViewConfig.cs" />
+    <Compile Include="Configurations\UIConfig.cs" />
+    <Compile Include="Configurations\SequenceViewConfig.cs" />
+    <Compile Include="Configurations\AppConfiguration.cs" />
+    <Compile Include="Data\Controller.cs" />
+    <Compile Include="Data\Metadata.cs" />
+    <Compile Include="Data\MetadataCollection.cs" />
+    <Compile Include="Data\SequencePosition.cs" />
+    <Compile Include="Data\SequenceCollection.cs" />
+    <Compile Include="Configurations\ColumnSizeCollection.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceImport.cs" />
+    <Compile Include="Data\Tasks\TaskMetadataImport.cs" />
+    <Compile Include="Data\Tasks\TaskMetadataSelectAll.cs" />
+    <Compile Include="Data\Tasks\TaskMetadataSelectNone.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceSearchClear.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceSelectNone.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceSelectAll.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceSearch.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceRemove.cs" />
+    <Compile Include="Data\Tasks\TaskMetadataRemove.cs" />
+    <Compile Include="Data\Tasks\TaskMetadataRead.cs" />
+    <Compile Include="Data\Tasks\TaskSequenceRead.cs" />
     <Compile Include="UserInterface\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Data\Tasks\Task.cs" />
+    <Compile Include="UserInterface\MainWindow.MenuEvent.cs" />
     <Compile Include="Utility.cs" />
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="UserInterface\Factory.cs" />
     <Compile Include="UserInterface\ListViewSortAdorner.cs" />
-    <Compile Include="UserInterface\FontFamilyToStringConverter.cs" />
     <Compile Include="UserInterface\OptionDialog.xaml.cs">
       <DependentUpon>OptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FASTA\Sequence.cs" />
+    <Compile Include="Data\Sequence.cs" />
     <Compile Include="UserInterface\SequenceViewer.xaml.cs">
       <DependentUpon>SequenceViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserInterface\MainWindow.EventHandler.cs" />
+    <Compile Include="UserInterface\MainWindow.MainPageEvent.cs" />
     <Page Include="UserInterface\AboutDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

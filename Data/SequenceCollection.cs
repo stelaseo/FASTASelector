@@ -4,19 +4,34 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace FASTASelector.FASTA
+namespace FASTASelector.Data
 {
     internal sealed class SequenceCollection : ObservableCollection<Sequence>
     {
         private string _filename = string.Empty;
 
 
+        public SequenceCollection( )
+        {
+        }
+
+
+        public SequenceCollection( SequenceCollection other )
+        {
+            FileName = other.FileName;
+            foreach( Sequence item in other )
+            {
+                Add( item );
+            }
+        }
+
+
         public string FileName
         {
             get { return _filename; }
-            private set
+            set
             {
-                _filename = value;
+                _filename = value ?? string.Empty;
                 OnPropertyChanged( new PropertyChangedEventArgs( "FileName" ) );
             }
         }
@@ -28,9 +43,8 @@ namespace FASTASelector.FASTA
             bool success = true;
             try
             {
-                sr = new StreamReader( filename, App.Configuration.SequenceFileEncoding );
-                int count = ReadProcessLines( sr );
-                App.Log( App.DEFAULT, "Total of {0} sequence(s) have been imported from {1}", count, filename );
+                sr = new StreamReader( filename, App.Configuration.SequenceView.FileEncoding );
+                ReadProcessLines( sr );
             }
             catch( Exception ex )
             {
@@ -56,10 +70,9 @@ namespace FASTASelector.FASTA
             Clear( );
             try
             {
-                sr = new StreamReader( filename, App.Configuration.SequenceFileEncoding );
-                int count = ReadProcessLines( sr );
+                sr = new StreamReader( filename, App.Configuration.SequenceView.FileEncoding );
+                ReadProcessLines( sr );
                 FileName = filename;
-                App.Log( App.DEFAULT, "Total of {0} sequence(s) have been read from {1}", count, filename );
             }
             catch( Exception ex )
             {
@@ -85,14 +98,14 @@ namespace FASTASelector.FASTA
             filename = filename ?? FileName;
             try
             {
-                sw = new StreamWriter( filename, false, App.Configuration.SequenceFileEncoding );
+                sw = new StreamWriter( filename, false, App.Configuration.SequenceView.FileEncoding );
                 foreach( Sequence seq in this )
                 {
                     sw.Write( '>' );
                     sw.Write( seq.RawHeader );
                     for( int i = 0; i < seq.Value.Length; ++i )
                     {
-                        if( (i % App.Configuration.SequenceViewWidth) == 0 )
+                        if( (i % App.Configuration.SequenceView.ViewWidth) == 0 )
                         {
                             sw.WriteLine( );
                         }
@@ -100,7 +113,6 @@ namespace FASTASelector.FASTA
                     }
                     sw.WriteLine( );
                 }
-                App.Log( App.DEFAULT, "Total of {0} sequence(s) have been written to {1}", Count, filename );
                 FileName = filename;
             }
             catch( Exception ex )
@@ -121,11 +133,10 @@ namespace FASTASelector.FASTA
         }
 
 
-        private int ReadProcessLines( StreamReader sr )
+        private void ReadProcessLines( StreamReader sr )
         {
             StringBuilder sb = null;
             Sequence seq = null;
-            int count = 0;
             int lineNumber = 1;
             string line = sr.ReadLine( );
             while( line != null )
@@ -150,7 +161,6 @@ namespace FASTASelector.FASTA
                         {   // the next sequence
                             seq.Value = sb.ToString( );
                         }
-                        count++;
                         sb = new StringBuilder( );
                         seq = new Sequence( );
                         seq.RawHeader = line.Substring( 1 ).Trim( );
@@ -168,7 +178,6 @@ namespace FASTASelector.FASTA
             {   // the last sequence
                 seq.Value = sb.ToString( );
             }
-            return count;
         }
 
     }

@@ -7,10 +7,10 @@
         xmlns:ui="clr-namespace:FASTASelector.UserInterface"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Left="{Binding Configuration.WindowPositionX,Mode=TwoWay}"
-        Top="{Binding Configuration.WindowPositionY,Mode=TwoWay}"
-        Width="{Binding Configuration.WindowSizeWidth,Mode=TwoWay}"
-        Height="{Binding Configuration.WindowSizeHeight,Mode=TwoWay}"
+        Left="{Binding UIConfiguration.WindowPositionX,Mode=TwoWay}"
+        Top="{Binding UIConfiguration.WindowPositionY,Mode=TwoWay}"
+        Width="{Binding UIConfiguration.WindowSizeWidth,Mode=TwoWay}"
+        Height="{Binding UIConfiguration.WindowSizeHeight,Mode=TwoWay}"
         Title="MainWindow"
         MinHeight="300"
         MinWidth="400"
@@ -32,14 +32,16 @@
                 <MenuItem Header="E_xit" Click="MenuExit"/>
             </MenuItem>
             <MenuItem Header="_Tools">
-                <!--
-                <MenuItem Header="_Undo" Click="MenuSequenceUndo" IsEnabled="{Binding HasTasksToUndo,Mode=OneWay}"/>
-                <MenuItem Header="_Redo" Click="MenuSequenceRedo" IsEnabled="{Binding HasTasksToRedo,Mode=OneWay}"/>
+                <MenuItem Header="_Undo" Click="MenuUndo" IsEnabled="{Binding Controller.HasTasksToUndo,Mode=OneWay}"/>
+                <MenuItem Header="_Redo" Click="MenuRedo" IsEnabled="{Binding Controller.HasTasksToRedo,Mode=OneWay}"/>
                 <Separator/>
-                -->
-                <MenuItem Header="_Select All" Click="MenuSelectAllSequences"/>
-                <MenuItem Header="_Deselect All" Click="MenuDeselectAllSequences"/>
-                <MenuItem Header="Remo_ve selected sequence(s)" Click="MenuRemoveSelections"/>
+                <MenuItem Header="Select all metadata" Click="MenuSelectAllMetadata"/>
+                <MenuItem Header="Deselect all metadata" Click="MenuDeselectAllMetadata"/>
+                <MenuItem Header="Remove selected metadata" Click="MenuRemoveSelectedMetadata"/>
+                <Separator/>
+                <MenuItem Header="Select all sequences" Click="MenuSelectAllSequences"/>
+                <MenuItem Header="Deselect all sequences" Click="MenuDeselectAllSequences"/>
+                <MenuItem Header="Remove selected sequence(s)" Click="MenuRemoveSelectedSequences"/>
                 <Separator/>
                 <MenuItem Header="_Options" Click="MenuViewOptions"/>
             </MenuItem>
@@ -64,35 +66,47 @@
             <GridSplitter Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="1" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
             <GridSplitter Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="3" Grid.RowSpan="1" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
             <GridSplitter Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="3" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
-            <ListView Grid.Column="0"
-                      Grid.Row="0"
-                      Name="uiMetadataList"
-                      BorderBrush="Transparent"
-                      BorderThickness="0"
-                      ItemsSource="{Binding Metadata,Mode=OneTime}"
-                      ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-            <ListView Grid.Column="0"
-                      Grid.Row="2"
-                      Name="uiSequenceList"
-                      BorderBrush="Transparent"
-                      BorderThickness="0"
-                      ItemsSource="{Binding Sequences,Mode=OneTime}"
-                      PreviewKeyDown="SequenceList_KeyDown"
-                      ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            <Grid Grid.Column="0" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Metadata,Mode=OneTime}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
+                <ListView Grid.Row="1"
+                          Name="uiMetadataList"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          ItemsSource="{Binding Controller.Metadata,Mode=OneWay}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" DataContext="{Binding Controller.Sequences,Mode=OneTime}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
+                <ListView Grid.Row="1"
+                          Name="uiSequenceList"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          ItemsSource="{Binding Controller.Sequences,Mode=OneWay}"
+                          PreviewKeyDown="SequenceList_KeyDown"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
             <Grid Grid.Column="0" Grid.Row="4" DataContext="{Binding ElementName=uiSequenceList,Path=SelectedItem,Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -123,7 +137,7 @@
                         <ColumnDefinition Width="Auto" MinWidth="56"/>
                         <ColumnDefinition Width="Auto" MinWidth="56"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Margin="0,4,0,4" Text="{Binding Configuration.SearchText,Mode=TwoWay}" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="0" Margin="0,4,0,4" Text="{Binding Configuration.CoreUI.SearchText,Mode=TwoWay}" VerticalContentAlignment="Center"/>
                     <Button Grid.Column="1" Margin="4,4,0,4" Padding="4" Content="Search" Click="ClickSearchButton"/>
                     <Button Grid.Column="2" Margin="4,4,0,4" Padding="4" Content="Clear" Click="ClickSearchClear"/>
                 </Grid>
@@ -136,9 +150,9 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Begin Offset: " VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="1" Margin="0,4,0,4" Padding="4,0" Tag="SearchBeginOffset" Text="{Binding Configuration.SearchBeginOffset,Mode=TwoWay}" VerticalContentAlignment="Center" MouseWheel="MouseWheelOnOffset"/>
+                    <TextBox Grid.Column="1" Margin="0,4,0,4" Padding="4,0" Tag="SearchBeginOffset" Text="{Binding Configuration.CoreUI.SearchBeginOffset,Mode=TwoWay}" VerticalContentAlignment="Center" MouseWheel="MouseWheelOnOffset"/>
                     <TextBlock Grid.Column="3" Text="End Offset: " VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="4" Margin="0,4,0,4" Padding="4,0" Tag="SearchEndOffset" Text="{Binding Configuration.SearchEndOffset,Mode=TwoWay}" VerticalContentAlignment="Center" MouseWheel="MouseWheelOnOffset"/>
+                    <TextBox Grid.Column="4" Margin="0,4,0,4" Padding="4,0" Tag="SearchEndOffset" Text="{Binding Configuration.CoreUI.SearchEndOffset,Mode=TwoWay}" VerticalContentAlignment="Center" MouseWheel="MouseWheelOnOffset"/>
                 </Grid>
                 <TextBox Grid.Row="2"
                          Name="uiLogText"

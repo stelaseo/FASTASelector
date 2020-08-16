@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using FASTASelector.Configurations;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,6 +11,7 @@ namespace FASTASelector.UserInterface
 {
     internal partial class OptionDialog : Window
     {
+
         public OptionDialog( )
         {
             ObservableCollection<string> encodings = new ObservableCollection<string>( );
@@ -36,27 +38,11 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void MouseWheelOnDouble( object sender, MouseWheelEventArgs e )
+        private void MouseWheel_CoreUI_Double( object sender, MouseWheelEventArgs e )
         {
-            if( e.Delta != 0 && DataContext is AppConfiguration configuration && sender is TextBox textBox )
+            if( e.Delta != 0 && DataContext is AppConfiguration appConfiguration && sender is TextBox textBox )
             {
-                string propertyName = textBox.Tag.ToString( );
-                PropertyInfo propertyInfo = configuration.GetType( ).GetProperty( propertyName );
-                double modifier = e.Delta / 120.0;
-                double value = (double)propertyInfo.GetValue( configuration );
-                if( (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift )
-                {
-                    modifier *= 5.0;
-                }
-                propertyInfo.SetValue( configuration, value + modifier );
-            }
-        }
-
-
-        private void MouseWheelOnDoubleBigNumber( object sender, MouseWheelEventArgs e )
-        {
-            if( e.Delta != 0 && DataContext is AppConfiguration configuration && sender is TextBox textBox )
-            {
+                UIConfig configuration = appConfiguration.CoreUI;
                 string propertyName = textBox.Tag.ToString( );
                 PropertyInfo propertyInfo = configuration.GetType( ).GetProperty( propertyName );
                 double modifier = e.Delta / 120.0 * 100.0;
@@ -70,10 +56,29 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void MouseWheelOnInteger( object sender, MouseWheelEventArgs e )
+        private void MouseWheel_SequenceView_Double( object sender, MouseWheelEventArgs e )
         {
-            if( e.Delta != 0 && DataContext is AppConfiguration configuration && sender is TextBox textBox )
+            if( e.Delta != 0 && DataContext is AppConfiguration appConfiguration && sender is TextBox textBox )
             {
+                SequenceViewConfig configuration = appConfiguration.SequenceView;
+                string propertyName = textBox.Tag.ToString( );
+                PropertyInfo propertyInfo = configuration.GetType( ).GetProperty( propertyName );
+                double modifier = e.Delta / 120.0;
+                double value = (double)propertyInfo.GetValue( configuration );
+                if( (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift )
+                {
+                    modifier *= 5.0;
+                }
+                propertyInfo.SetValue( configuration, value + modifier );
+            }
+        }
+
+
+        private void MouseWheel_SequenceView_Integer( object sender, MouseWheelEventArgs e )
+        {
+            if( e.Delta != 0 && DataContext is AppConfiguration appConfiguration && sender is TextBox textBox )
+            {
+                SequenceViewConfig configuration = appConfiguration.SequenceView;
                 string propertyName = textBox.Tag.ToString( );
                 PropertyInfo propertyInfo = configuration.GetType( ).GetProperty( propertyName );
                 int modifier = e.Delta > 0 ? 1 : -1;
@@ -83,6 +88,19 @@ namespace FASTASelector.UserInterface
                     modifier *= 5;
                 }
                 propertyInfo.SetValue( configuration, value + modifier );
+            }
+        }
+
+
+        private void Window_PreviewKeyDown( object sender, KeyEventArgs e )
+        {
+            switch( e.Key )
+            {
+            case Key.Enter:
+            case Key.Escape:
+                Close( );
+                e.Handled = true;
+                break;
             }
         }
 

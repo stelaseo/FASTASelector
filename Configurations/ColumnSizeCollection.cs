@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FASTASelector
+namespace FASTASelector.Configurations
 {
     internal sealed class ColumnSizeCollection
     {
@@ -40,7 +40,14 @@ namespace FASTASelector
 
         public void FromDictionary( Dictionary<string, double> other )
         {
-            _sizes = new Dictionary<string, double>( other );
+            if( other != null && other.Count > 0 )
+            {
+                _sizes = new Dictionary<string, double>( other );
+            }
+            else
+            {
+                _sizes = new Dictionary<string, double>( );
+            }
             CollectionChanged?.Invoke( this, string.Empty );
         }
 

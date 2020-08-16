@@ -5,12 +5,29 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace FASTASelector.FASTA
+namespace FASTASelector.Data
 {
     internal sealed class MetadataCollection : ObservableCollection<Metadata>
     {
         private const char DELIMITER = '\t';
         private string _filename = string.Empty;
+
+
+        public MetadataCollection( )
+        {
+            Columns = new Dictionary<string, string>( );
+        }
+
+
+        public MetadataCollection( MetadataCollection other )
+        {
+            Columns = new Dictionary<string, string>( other.Columns );
+            FileName = other.FileName;
+            foreach( Metadata item in other )
+            {
+                Add( new Metadata( item ) );
+            }
+        }
 
 
         /// <summary>
@@ -24,7 +41,7 @@ namespace FASTASelector.FASTA
         {
             get;
             private set;
-        } = new Dictionary<string, string>( );
+        }
 
 
         public string FileName
@@ -32,7 +49,7 @@ namespace FASTASelector.FASTA
             get { return _filename; }
             private set
             {
-                _filename = value;
+                _filename = value ?? string.Empty;
                 OnPropertyChanged( new PropertyChangedEventArgs( "FileName" ) );
             }
         }
@@ -63,25 +80,14 @@ namespace FASTASelector.FASTA
         }
 
 
-        public string GetColumnName( string key )
-        {
-            if( Columns.ContainsKey( key ) )
-            {
-                return Columns[key];
-            }
-            return key;
-        }
-
-
         public bool Import( string filename )
         {
             StreamReader sr = null;
             bool success = true;
             try
             {
-                sr = new StreamReader( filename, App.Configuration.MetadataFileEncoding );
+                sr = new StreamReader( filename, App.Configuration.MetadataView.FileEncoding );
                 string line = sr.ReadLine( );
-                int count = 0;
                 if( line != null )
                 {
                     string[] columns = line.Split( DELIMITER );
@@ -110,9 +116,8 @@ namespace FASTASelector.FASTA
                             entry[key] = string.Empty;
                         }
                     }
-                    count = ReadProcessLines( sr, columns, colsAddToImport.ToArray( ), colsTheSame );
+                    ReadProcessLines( sr, columns, colsAddToImport.ToArray( ), colsTheSame );
                 }
-                App.Log( App.DEFAULT, "Total of {0} metadata have been imported from {1}", count, filename );
             }
             catch( Exception ex )
             {
@@ -138,9 +143,8 @@ namespace FASTASelector.FASTA
             Clear( );
             try
             {
-                sr = new StreamReader( filename, App.Configuration.MetadataFileEncoding );
+                sr = new StreamReader( filename, App.Configuration.MetadataView.FileEncoding );
                 string line = sr.ReadLine( );
-                int count = 0;
                 if( line != null )
                 {
                     string[] columns = line.Split( DELIMITER );
@@ -153,10 +157,9 @@ namespace FASTASelector.FASTA
                             Columns.Add( columns[i], value );
                         }
                     }
-                    count = ReadProcessLines( sr, columns );
+                    ReadProcessLines( sr, columns );
                 }
                 FileName = filename;
-                App.Log( App.DEFAULT, "Total of {0} metadata have been read from {1}", count, filename );
             }
             catch( Exception ex )
             {
@@ -182,7 +185,7 @@ namespace FASTASelector.FASTA
             filename = filename ?? FileName;
             try
             {
-                sw = new StreamWriter( filename, false, App.Configuration.MetadataFileEncoding );
+                sw = new StreamWriter( filename, false, App.Configuration.MetadataView.FileEncoding );
                 StringBuilder line = new StringBuilder( );
                 List<string> columns = new List<string>( );
                 foreach( KeyValuePair<string, string> kv in Columns )
@@ -203,7 +206,6 @@ namespace FASTASelector.FASTA
                     }
                     sw.Write( line.Remove( line.Length - 1, 1 ).ToString( ) );
                 }
-                App.Log( App.DEFAULT, "Total of {0} metadata have been written to {1}", Count, filename );
                 FileName = filename;
             }
             catch( Exception ex )
@@ -224,9 +226,8 @@ namespace FASTASelector.FASTA
         }
 
 
-        private int ReadProcessLines( StreamReader sr, string[] columns )
+        private void ReadProcessLines( StreamReader sr, string[] columns )
         {
-            int count = 0;
             int lineNumber = 2;
             string line = sr.ReadLine( );
             while( line != null )
@@ -252,18 +253,15 @@ namespace FASTASelector.FASTA
                     }
 
                     Add( entry );
-                    count++;
                 }
                 lineNumber++;
                 line = sr.ReadLine( );
             }
-            return count;
         }
 
 
-        private int ReadProcessLines( StreamReader sr, string[] columns, string[] emptyColumns, Dictionary<string, int> sameColumns )
+        private void ReadProcessLines( StreamReader sr, string[] columns, string[] emptyColumns, Dictionary<string, int> sameColumns )
         {
-            int count = 0;
             int lineNumber = 2;
             string line = sr.ReadLine( );
             while( line != null )
@@ -303,12 +301,10 @@ namespace FASTASelector.FASTA
                     }
 
                     Add( entry );
-                    count++;
                 }
                 lineNumber++;
                 line = sr.ReadLine( );
             }
-            return count;
         }
 
     }

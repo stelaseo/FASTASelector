@@ -1,4 +1,4 @@
-﻿using FASTASelector.FASTA;
+﻿using FASTASelector.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,8 +65,8 @@ namespace FASTASelector.UserInterface
         {
             if( _highlightIndex < _workData.Highlights.Count )
             {
-                _highlightBegin = _workData.Highlights[_highlightIndex].Item1;
-                _highlightEnd = _workData.Highlights[_highlightIndex].Item2;
+                _highlightBegin = _workData.Highlights[_highlightIndex].Begin;
+                _highlightEnd = _workData.Highlights[_highlightIndex].End;
                 _highlightIndex++;
                 _highlight = HIGHLIGHT_STATE.LOOK_FOR_BEGIN;
             }
@@ -82,16 +82,16 @@ namespace FASTASelector.UserInterface
 
         private void UpdateView( Sequence data )
         {
-            FontFamily = App.Configuration.SequenceViewFontFamily;
-            FontSize = App.Configuration.SequenceViewFontSize;
+            FontFamily = App.Configuration.SequenceView.FontFamily;
+            FontSize = App.Configuration.SequenceView.FontSize;
             Document.Blocks.Clear( );
-            Document.LineHeight = App.Configuration.SequenceViewLineHeight;
+            Document.LineHeight = App.Configuration.SequenceView.LineHeight;
             if( data != null )
             {
                 _highlightIndex = 0;
                 _workData = data;
                 _workPosPrev = 0;
-                _workPosCurr = App.Configuration.SequenceViewWidth;
+                _workPosCurr = App.Configuration.SequenceView.ViewWidth;
                 _workString = new StringBuilder( );
                 GrabNextHighlight( );
                 while( _workPosPrev < _workData.Value.Length )
@@ -104,7 +104,7 @@ namespace FASTASelector.UserInterface
 
         private void UpdateViewNoHighlight( )
         {
-            int viewWidth = App.Configuration.SequenceViewWidth;
+            int viewWidth = App.Configuration.SequenceView.ViewWidth;
             while( _workPosCurr < _workData.Value.Length )
             {
                 _workString.Append( _workData.Value.Substring( _workPosPrev, _workPosCurr - _workPosPrev ) );
@@ -127,7 +127,7 @@ namespace FASTASelector.UserInterface
 
         private void UpdateViewFindHighlightBegin( )
         {
-            int viewWidth = App.Configuration.SequenceViewWidth;
+            int viewWidth = App.Configuration.SequenceView.ViewWidth;
             while( _highlight == HIGHLIGHT_STATE.LOOK_FOR_BEGIN && _workPosPrev < _workData.Value.Length )
             {
                 if( _highlightBegin <= _workPosCurr )
@@ -157,7 +157,7 @@ namespace FASTASelector.UserInterface
 
         private void UpdateViewFindHighlightEnd( )
         {
-            int viewWidth = App.Configuration.SequenceViewWidth;
+            int viewWidth = App.Configuration.SequenceView.ViewWidth;
             while( _highlight == HIGHLIGHT_STATE.LOOK_FOR_END && _workPosPrev < _workData.Value.Length )
             {
                 if( _highlightEnd < _workPosCurr )

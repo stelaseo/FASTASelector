@@ -1,5 +1,5 @@
-﻿using FASTASelector.FASTA;
-using FASTASelector.Tasks;
+﻿using FASTASelector.Configurations;
+using FASTASelector.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace FASTASelector.UserInterface
@@ -15,14 +16,13 @@ namespace FASTASelector.UserInterface
     {
         private const string CONFIG_FILE_NAME = "FASTASelector.json";
         private DispatcherTimer _statusTextReset = new DispatcherTimer( );
-        private List<Task> _taskHistory = new List<Task>( );
-        private int _taskIndex = 0;
 
 
         public MainWindow( )
         {
             Configuration.Read( CONFIG_FILE_NAME );
             InitializeComponent( );
+            InitializeCommandBindings( );
         }
 
 
@@ -35,36 +35,43 @@ namespace FASTASelector.UserInterface
         }
 
 
-        public bool HasTasksToRedo
+        public Controller Controller
         {
-            get { return 0 <= _taskIndex && _taskIndex < _taskHistory.Count; }
+            get { return App.Controller; }
         }
-
-
-        public bool HasTasksToUndo
-        {
-            get { return 0 < _taskIndex && _taskIndex <= _taskHistory.Count; }
-        }
-
-
-        public MetadataCollection Metadata
-        {
-            get;
-            private set;
-        } = new MetadataCollection( );
-
-
-        public SequenceCollection Sequences
-        {
-            get;
-            private set;
-        } = new SequenceCollection( );
 
 
         public string StatusText
         {
             get;
             private set;
+        }
+
+
+        public UIConfig UIConfiguration
+        {
+            get { return App.Configuration.CoreUI; }
+        }
+
+
+        private void InitializeCommandBindings( )
+        {
+            RoutedCommand command;
+            command = new RoutedCommand( "Undo", typeof( Window ) );
+            command.InputGestures.Add( new KeyGesture( Key.Z, ModifierKeys.Control ) );
+            CommandBindings.Add( new CommandBinding( command, MenuUndo ) );
+
+            command = new RoutedCommand( "Redo", typeof( Window ) );
+            command.InputGestures.Add( new KeyGesture( Key.Y, ModifierKeys.Control ) );
+            CommandBindings.Add( new CommandBinding( command, MenuRedo ) );
+
+            command = new RoutedCommand( "Options", typeof( Window ) );
+            command.InputGestures.Add( new KeyGesture( Key.F10 ) );
+            CommandBindings.Add( new CommandBinding( command, MenuViewOptions ) );
+
+            command = new RoutedCommand( "About", typeof( Window ) );
+            command.InputGestures.Add( new KeyGesture( Key.F1 ) );
+            CommandBindings.Add( new CommandBinding( command, MenuViewAbout ) );
         }
 
 
@@ -97,7 +104,7 @@ namespace FASTASelector.UserInterface
 
         private void ShowStatus( string text )
         {
-            _statusTextReset.Interval = TimeSpan.FromMilliseconds( Configuration.StatusTextDuration );
+            _statusTextReset.Interval = TimeSpan.FromMilliseconds( Configuration.CoreUI.StatusTextDuration );
             _statusTextReset.Start( );
             StatusText = text;
             NotifyPropertyChanged( "StatusText" );
@@ -127,21 +134,13 @@ namespace FASTASelector.UserInterface
         }
 
 
-        private void UpdateMetadataLinkWithSequences( )
-        {
-            foreach( Sequence sequence in Sequences )
-            {
-                sequence.Metadata = Metadata.Find( sequence.Header );
-            }
-        }
-
-
         private void UpdateMetadataListView( )
         {
             GridView gridView = new GridView( );
-            foreach( KeyValuePair<string, string> kv in Metadata.Columns )
+            gridView.Columns.Add( Factory.CreateCheckBoxColumn( App.Configuration.CoreUI.MetadataColumnSize, "Checked", ColumnHeaderClick ) );
+            foreach( KeyValuePair<string, string> kv in Controller.Metadata.Columns )
             {
-                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.UIMetadataListColumnSize, kv.Value, "[" + kv.Key + "]", ColumnHeaderClick ) );
+                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.MetadataColumnSize, kv.Value, "[" + kv.Key + "]", ColumnHeaderClick ) );
             }
             uiMetadataList.View = gridView;
         }
@@ -149,16 +148,16 @@ namespace FASTASelector.UserInterface
 
         private void UpdateSequenceListView( )
         {
-            string[] keys = App.Configuration.SequenceHeaders;
+            string[] keys = App.Controller.SequenceHeaderKeys;
             GridView gridView = new GridView( );
-            gridView.Columns.Add( Factory.CreateCheckBoxColumn( App.Configuration.UISequenceListColumnSize, "Checked", ColumnHeaderClick ) );
+            gridView.Columns.Add( Factory.CreateCheckBoxColumn( App.Configuration.CoreUI.SequenceColumnSize, "Checked", ColumnHeaderClick ) );
             for( int i = 0; i < keys.Length; ++i )
             {
-                string columnName = Metadata.GetColumnName( keys[i] );
-                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.UISequenceListColumnSize, columnName, "Header[" + keys[i] + "]", ColumnHeaderClick ) );
+                string columnName = Controller.GetSequenceListColumnName( keys[i] );
+                gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, columnName, "Header[" + keys[i] + "]", ColumnHeaderClick ) );
             }
-            gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.UISequenceListColumnSize, "Length", "Value.Length", ColumnHeaderClick, HorizontalAlignment.Center ) );
-            gridView.Columns.Add( Factory.CreateLinkTextBlockColumn( App.Configuration.UISequenceListColumnSize, "Metadata", "Metadata", ColumnHeaderClick, ClickMetadataLink ) );
+            gridView.Columns.Add( Factory.CreateTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, "Length", "Value.Length", ColumnHeaderClick, HorizontalAlignment.Center ) );
+            gridView.Columns.Add( Factory.CreateLinkTextBlockColumn( App.Configuration.CoreUI.SequenceColumnSize, "Metadata", "Metadata", ColumnHeaderClick, ClickMetadataLink ) );
             uiSequenceList.View = gridView;
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace FASTASelector.FASTA
+namespace FASTASelector.Data
 {
     internal sealed class Sequence : INotifyPropertyChanged
     {
@@ -20,17 +20,6 @@ namespace FASTASelector.FASTA
 
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-
-        public Metadata Metadata
-        {
-            get { return _metadata; }
-            set
-            {
-                _metadata = value;
-                NotifyPropertyChanged( );
-            }
-        }
 
 
         public bool Checked
@@ -52,16 +41,27 @@ namespace FASTASelector.FASTA
 
 
         /// <summary>
-        /// The tuples to highlight portions of the sequence data in SequenceViewer.
+        /// Positions to highlight portions of the sequence data in SequenceViewer.
         /// </summary>
         /// <remarks>
         /// The list has to be in the ascending order without overlap.
         /// </remarks>
-        public List<Tuple<int, int>> Highlights
+        public List<SequencePosition> Highlights
         {
             get;
             private set;
-        } = new List<Tuple<int, int>>( );
+        } = new List<SequencePosition>( );
+
+
+        public Metadata Metadata
+        {
+            get { return _metadata; }
+            set
+            {
+                _metadata = value;
+                NotifyPropertyChanged( );
+            }
+        }
 
 
         public string RawHeader
@@ -89,26 +89,24 @@ namespace FASTASelector.FASTA
 
         public bool Highlight( string text, int beginOffset, int endOffset )
         {
-            Checked = false;
             Highlights.Clear( );
             bool found = false;
             int index = Value.IndexOf( text, beginOffset, StringComparison.CurrentCultureIgnoreCase );
             while( index >= 0 && index + text.Length < Value.Length - endOffset )
             {
                 found = true;
-                Highlights.Add( new Tuple<int, int>( index, index + text.Length ) );
+                Highlights.Add( new SequencePosition( index, index + text.Length ) );
                 index = Value.IndexOf( text, index + text.Length, StringComparison.CurrentCultureIgnoreCase );
             }
-            Checked = found;
             return found;
         }
 
 
         public void ParseHeader( )
         {
+            string[] keys = App.Controller.SequenceHeaderKeys;
             Header.Clear( );
-            string[] keys = App.Configuration.SequenceHeaders;
-            if( keys.Length > 0 )
+            if( keys != null && keys.Length > 0 )
             {
                 string[] values = RawHeader.Split( new char[] { HEADER_DELIMITER }, keys.Length );
                 for( int i = 0; i < keys.Length && i < values.Length; ++i )

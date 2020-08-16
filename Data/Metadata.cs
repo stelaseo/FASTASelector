@@ -1,12 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace FASTASelector.FASTA
+namespace FASTASelector.Data
 {
-    internal sealed class Metadata
+    internal sealed class Metadata : INotifyPropertyChanged
     {
-        private Dictionary<string, string> _data = new Dictionary<string, string>( );
+        private Dictionary<string, string> _data = null;
+        private bool _checked = false;
+
+
+        public Metadata( )
+        {
+            _data = new Dictionary<string, string>( );
+        }
+
+
+        public Metadata( Metadata other )
+        {
+            _data = new Dictionary<string, string>( other._data );
+            _checked = other._checked;
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
 
         public string this[string key]
@@ -29,6 +48,18 @@ namespace FASTASelector.FASTA
                 {
                     _data.Add( key, value ?? string.Empty );
                 }
+                NotifyPropertyChanged( "[" + key + "]" );
+            }
+        }
+
+
+        public bool Checked
+        {
+            get { return _checked; }
+            set
+            {
+                _checked = value;
+                NotifyPropertyChanged( );
             }
         }
 
@@ -65,11 +96,17 @@ namespace FASTASelector.FASTA
                 sb.Append( enumerator.Current.Value );
                 while( enumerator.MoveNext( ) )
                 {
-                    sb.Append( '|' );
+                    sb.Append( Sequence.HEADER_DELIMITER );
                     sb.Append( enumerator.Current.Value );
                 }
             }
             return sb.ToString( );
+        }
+
+
+        private void NotifyPropertyChanged( [CallerMemberName] string name = "" )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );
         }
 
     }
