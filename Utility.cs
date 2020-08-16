@@ -55,7 +55,14 @@ namespace FASTASelector
             if( beginIndex >= 0 && endIndex >= 0 && beginIndex < endIndex )
             {
                 string webName = value.Substring( beginIndex + 1, endIndex - beginIndex - 1 );
-                result = Encoding.GetEncoding( webName );
+                if( webName == Encoding.UTF8.WebName )
+                {   // special case (disable UTF-8 byte order mark)
+                    result = new UTF8Encoding( false );
+                }
+                else
+                {
+                    result = Encoding.GetEncoding( webName );
+                }
             }
             return result;
         }

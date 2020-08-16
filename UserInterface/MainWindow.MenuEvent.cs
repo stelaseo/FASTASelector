@@ -203,12 +203,18 @@ namespace FASTASelector.UserInterface
         private void MenuUndo( object sender, RoutedEventArgs e )
         {
             Controller.PerformUndo( );
+            uiMetadataList.UpdateListViewColumns( );
+            uiSequenceList.UpdateListViewColumns( );
+            uiSequenceViewer.UpdateView( );
         }
 
 
         private void MenuRedo( object sender, RoutedEventArgs e )
         {
             Controller.PerformRedo( );
+            uiMetadataList.UpdateListViewColumns( );
+            uiSequenceList.UpdateListViewColumns( );
+            uiSequenceViewer.UpdateView( );
         }
 
 
