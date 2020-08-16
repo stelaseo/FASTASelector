@@ -27,6 +27,7 @@ namespace FASTASelector.Data
                 {
                     App.Log( App.DEFAULT, "Total of {0} sequence(s) have been read from {1}", _newList.Count, FileName );
                     controller.Sequences = _newList;
+                    controller.UpdateMetadataLink( );
                     success = true;
                 }
                 return success;
@@ -38,6 +39,7 @@ namespace FASTASelector.Data
                 Debug.Assert( _oldList != null && _newList != null );
                 App.Log( App.DEFAULT, "Total of {0} sequence(s) have been read from {1}", _newList.Count, FileName );
                 controller.Sequences = _newList;
+                controller.UpdateMetadataLink( );
             }
 
 
@@ -45,6 +47,7 @@ namespace FASTASelector.Data
             {
                 App.Log( App.DEFAULT, "Reverted the sequence list to the state prior to reading {0}", FileName );
                 controller.Sequences = _oldList;
+                controller.UpdateMetadataLink( );
             }
 
         }

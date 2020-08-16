@@ -27,6 +27,7 @@ namespace FASTASelector.Data
                 {
                     App.Log( App.DEFAULT, "Metadata have been imported from {0}", FileName );
                     controller.Metadata = _newList;
+                    controller.UpdateMetadataLink( );
                     success = true;
                 }
                 return success;
@@ -38,6 +39,7 @@ namespace FASTASelector.Data
                 Debug.Assert( _oldList != null && _newList != null );
                 App.Log( App.DEFAULT, "Metadata have been imported from {0}", FileName );
                 controller.Metadata = _newList;
+                controller.UpdateMetadataLink( );
             }
 
 
@@ -45,6 +47,7 @@ namespace FASTASelector.Data
             {
                 App.Log( App.DEFAULT, "Reverted the metadata list to the state prior to importing {0}", FileName );
                 controller.Metadata = _oldList;
+                controller.UpdateMetadataLink( );
             }
 
         }

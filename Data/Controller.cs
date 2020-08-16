@@ -130,7 +130,6 @@ namespace FASTASelector.Data
             if( task.Initialize( this ) )
             {
                 AddToTaskBuffer( task );
-                UpdateMetadataLink( );
                 return true;
             }
             return false;
@@ -144,7 +143,6 @@ namespace FASTASelector.Data
             if( task.Initialize( this ) )
             {
                 AddToTaskBuffer( task );
-                UpdateMetadataLink( );
                 return true;
             }
             return false;
@@ -194,7 +192,6 @@ namespace FASTASelector.Data
             if( task.Initialize( this ) )
             {
                 AddToTaskBuffer( task );
-                UpdateSequenceHeader( );
                 return true;
             }
             return false;
@@ -208,7 +205,6 @@ namespace FASTASelector.Data
             if( task.Initialize( this ) )
             {
                 AddToTaskBuffer( task );
-                UpdateMetadataLink( );
                 return true;
             }
             return false;

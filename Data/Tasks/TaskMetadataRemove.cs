@@ -27,6 +27,7 @@ namespace FASTASelector.Data
                 if( _targetItems.Count > 0 )
                 {
                     App.Log( App.DEFAULT, "Removed {0} metadata", _targetIndices.Count );
+                    controller.UpdateMetadataLink( );
                 }
                 return _targetItems.Count > 0;
             }
@@ -40,6 +41,7 @@ namespace FASTASelector.Data
                     controller.Metadata.RemoveAt( _targetIndices[i] );
                 }
                 App.Log( App.DEFAULT, "Removed {0} metadata", _targetIndices.Count );
+                controller.UpdateMetadataLink( );
             }
 
 
@@ -51,6 +53,7 @@ namespace FASTASelector.Data
                     controller.Metadata.Insert( _targetIndices[i], _targetItems[i] );
                 }
                 App.Log( App.DEFAULT, "Restored {0} metadata", _targetIndices.Count );
+                controller.UpdateMetadataLink( );
             }
 
         }

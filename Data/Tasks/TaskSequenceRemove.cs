@@ -49,6 +49,7 @@ namespace FASTASelector.Data
                 for( int i = _targetIndices.Count - 1; i >= 0; --i )
                 {
                     controller.Sequences.Insert( _targetIndices[i], _targetItems[i] );
+                    _targetItems[i].Metadata = controller.Metadata.Find( _targetItems[i].Header );
                 }
                 App.Log( App.DEFAULT, "Restored {0} sequence(s)", _targetIndices.Count );
             }
