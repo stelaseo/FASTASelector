@@ -80,7 +80,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" DataContext="{Binding Controller.Sequences,Mode=OneWay}" Text="{Binding FileName,Mode=OneWay}" VerticalAlignment="Center"/>
-                <ui:SequenceListView x:Name="uiSequenceList" Grid.Row="1" DataContext="{Binding Controller,Mode=OneTime}" ItemsSource="{Binding Sequences,Mode=OneWay}" RemoveSelectedItems="MenuRemoveSelectedSequences" SelectMetadata="SelectMetadata"/>
+                <ui:SequenceListView x:Name="uiSequenceList" Grid.Row="1" DataContext="{Binding Controller,Mode=OneTime}" ItemsSource="{Binding Sequences,Mode=OneWay}" RemoveSelectedItems="MenuRemoveSelectedSequences" SelectionChanged="SequenceListSelectionChanged" SelectMetadata="SelectMetadata"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="4" DataContext="{Binding ElementName=uiSequenceList,Path=SelectedItem,Mode=OneWay}">
                 <Grid.ColumnDefinitions>

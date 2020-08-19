@@ -97,5 +97,14 @@ namespace FASTASelector.UserInterface
             }
         }
 
+
+        private void SequenceListSelectionChanged( object sender, SelectionChangedEventArgs e )
+        {
+            if( sender is ListView uiListView && uiListView.SelectedItem is Sequence sequence )
+            {
+                SelectMetadata( this, sequence.Metadata );
+            }
+        }
+
     }
 }
